@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<a href="{{ url_for('student_dashboard') }}" class="back">← Back</a>
+<div class="page-head"><div><span class="status {{ project['status'] }}">{{ project["status"]|capitalize }}</span><h1>{{ project["title"] }}</h1><p class="muted">USN: {{ project["usn"] }} · {{ project["category"] }} · Submitted {{ project["created_at"] }}</p></div><div class="amount">₹{{ "%.0f"|format(project["required_amount"]) }}</div></div>
+<div class="grid two">
+<div class="card"><h2>Project details</h2><p><b>Project name:</b> {{ project["title"] }}</p><p><b>USN:</b> {{ project["usn"] }}</p><p><b>Category:</b> {{ project["category"] }}</p><p>{{ project["description"] }}</p><p><b>GitHub:</b> {% if project["github_link"] %}<a href="{{ project['github_link'] }}" target="_blank">Open repository</a>{% else %}Not provided{% endif %}</p><p><b>Demo:</b> {% if project["demo_link"] %}<a href="{{ project['demo_link'] }}" target="_blank">Open demo</a>{% else %}Not provided{% endif %}</p></div>
+<div class="card"><h2>Funding & status</h2><p><b>Status:</b> {{ project["status"]|capitalize }}</p><p><b>Funded amount:</b> ₹{{ "%.0f"|format(project["funded_amount"]) }}</p><p><b>Sponsor:</b> {{ project["sponsor_name"] or "Awaiting sponsor" }}</p>{% if project["sponsor_comment"] %}<p><b>Sponsor comment:</b> {{ project["sponsor_comment"] }}</p>{% endif %}<h3>Status history</h3>{% for h in history %}<div class="history"><b>{{ h["new_status"]|capitalize }}</b><span>{{ h["changer"] or "System" }} · {{ h["changed_at"] }}</span>{% if h["comment"] %}<small>{{ h["comment"] }}</small>{% endif %}</div>{% endfor %}</div>
+</div>
+{% endblock %}

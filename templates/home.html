@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div>
+    <h1>Turn student ideas into funded projects.</h1>
+    <p>A platform connecting innovative students with sponsors, with AI assistance for project evaluation and similarity analysis.</p>
+    <div class="actions">
+      <a class="btn primary" href="{{ url_for('login') }}">Login</a>
+      <a class="btn secondary" href="{{ url_for('register') }}">Create account</a>
+    </div>
+  </div>
+  <div class="hero-card">
+    <div class="metric"><strong>2</strong><span>User roles</span></div>
+    <div class="metric"><strong>AI</strong><span>Project analysis</span></div>
+    <div class="metric"><strong>3</strong><span>Project statuses</span></div>
+  </div>
+</section>
+<section class="grid three">
+  <div class="card"><h3>For Students</h3><p>Submit projects, request funding, track decisions and view funded amounts.</p></div>
+  <div class="card"><h3>For Sponsors</h3><p>Review project details, contact students, approve/reject funding and approve or reject funding requests.</p></div>
+  <div class="card"><h3>AI Assistance</h3><p>Get an automatic project summary and find similar projects using NLP.</p></div>
+</section>
+{% endblock %}

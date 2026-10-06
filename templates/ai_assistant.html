@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="ai-page ai-global-page">
+  <div class="ai-page-head"><a class="ai-back" href="{{ url_for('sponsor_dashboard') }}">← Back to Sponsor Dashboard</a><h1>AI Assistance</h1><p>Ask anything about any project in the database.</p></div>
+  <div id="chat" class="ai-full-chat">
+    <div class="chat-bubble ai-bubble"><strong>AI Assistant</strong><p>Hello! Ask me about any submitted project using its <b>project name</b> or <b>USN</b>. I can search the project database and answer using the submitted information.</p></div>
+    <div class="ai-hints"><div class="hint-title">Try asking</div><div class="hint-grid"><span>Details of &lt;USN&gt;</span><span>Details of &lt;Project Name&gt;</span><span>Projects of &lt;USN&gt;</span><span>Projects of &lt;Student Name&gt;</span><span>Summarize &lt;Project Name&gt;</span><span>GitHub link for &lt;Project Name&gt;</span><span>Demo link for &lt;Project Name&gt;</span><span>Who is the student of &lt;USN&gt;?</span><span>Funding needed for &lt;Project Name&gt;</span><span>What category is &lt;Project Name&gt;?</span><span>Show pending projects</span></div></div>
+    <div id="stopArea"></div>
+  </div>
+  <div class="global-input"><input id="questionInput" autocomplete="off" placeholder="Ask anything about a project..." onkeydown="if(event.key==='Enter') sendTyped()"><button onclick="sendTyped()">Send</button></div>
+</div>
+<script>
+let contextProjectId=null, stopped=false;
+function esc(v){return String(v).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
+function scroll(){const c=document.getElementById('chat');c.scrollTop=c.scrollHeight;}
+function addBubble(type,heading,message){const chat=document.getElementById('chat');const cls=type==='user'?'user-bubble':'ai-bubble';chat.insertAdjacentHTML('beforeend',`<div class="chat-bubble ${cls}"><strong>${type==='user'?'You':'AI Assistant'}</strong>${heading?`<h3>${esc(heading)}</h3>`:''}<p>${esc(message).replace(/\n/g,'<br>')}</p></div>`);scroll();}
+async function sendTyped(){if(stopped)return;const input=document.getElementById('questionInput');const q=input.value.trim();if(!q)return;input.value='';addBubble('user','',q);const chat=document.getElementById('chat');const thinking=document.createElement('div');thinking.className='chat-bubble ai-bubble thinking';thinking.innerHTML='<strong>AI Assistant</strong><p>Searching the project database...</p>';chat.appendChild(thinking);scroll();try{const r=await fetch('{{ url_for("ai_global") }}',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q,context_project_id:contextProjectId})});const data=await r.json();thinking.remove();if(!r.ok)throw new Error(data.error||'Request failed');addBubble('ai',data.heading||'',data.message||'');if(data.project_id)contextProjectId=data.project_id;if(data.stopped){stopped=true;document.getElementById('stopArea').innerHTML='<div class="stopped-box">AI assistance stopped.<br><button class="restart-btn" onclick="restartAI()">↻ Restart AI Assistance</button></div>';input.disabled=true;input.placeholder='AI assistance stopped';}}catch(e){thinking.remove();addBubble('ai','Error','I could not process that question. Try including a project name or USN.');}scroll();}
+function restartAI(){stopped=false;contextProjectId=null;document.getElementById('stopArea').innerHTML='';const input=document.getElementById('questionInput');input.disabled=false;input.placeholder='Ask anything about a project...';addBubble('ai','','AI assistance restarted. What would you like to know?');input.focus();}
+</script>
+{% endblock %}

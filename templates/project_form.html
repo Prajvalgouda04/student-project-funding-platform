@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head"><div><span class="badge">NEW PROJECT</span><h1>Submit your project</h1><p class="muted">Provide the project and student details for sponsors.</p></div></div>
+<div class="card">
+<form method="post">
+<div class="grid two">
+<div><label>USN</label><input name="usn" required placeholder="e.g. 1MS22CS001"></div>
+<div><label>Student name</label><input name="student_name" required placeholder="Enter student name"></div>
+<div><label>Project name</label><input name="title" required placeholder="e.g. AI Waste Classification"></div>
+<div><label>Category</label><select name="category" required><option>Artificial Intelligence</option><option>Web Development</option><option>Healthcare</option><option>Education</option><option>Environment</option><option>IoT</option><option>Cybersecurity</option><option>Other</option></select></div>
+<div><label>Required amount (₹)</label><input type="number" min="0" name="required_amount" required></div>
+<div class="full-span"><label>Project description</label><textarea name="description" rows="6" required placeholder="Explain the problem, solution, technology and expected impact..."></textarea></div>
+<div><label>GitHub link</label><input name="github_link" placeholder="https://github.com/..."></div>
+<div><label>Demo/live link</label><input name="demo_link" placeholder="https://..."></div>
+</div>
+<div class="actions"><a class="btn secondary" href="{{ url_for('student_dashboard') }}">Cancel</a><button class="btn primary">Submit Project</button></div>
+</form>
+</div>
+{% endblock %}
